@@ -9,7 +9,7 @@ import TotalCrimesPanel from "@/components/panels/TotalCrimesPanel";
 import MostCommonCrimePanel from "@/components/panels/MostCommonCrimePanel";
 import SafetyScorePanel from "@/components/panels/SafetyScorePanel";
 
-const CrimeTrackerApp = () => {
+const CrimeTrackerApp: React.FC = () => {
   const [address, setAddress] = useState("");
   const [timeRange, setTimeRange] = useState("week");
 
