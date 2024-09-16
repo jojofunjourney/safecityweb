@@ -1,5 +1,12 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface TimeRangeSelectorProps {
   timeRange: string;
@@ -17,27 +24,36 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
   ];
 
   return (
-    <div className="time-range-selector flex flex-wrap items-center gap-4" data-testid="time-range-selector">
-      <div className="flex space-x-2">
-        {timeRanges.map((range) => (
-          <Button
-            key={range.value}
-            onClick={() => setTimeRange(range.value)}
-            variant="outline"
-            className={`time-range-button ${
-              timeRange === range.value
-                ? "bg-black text-white hover:bg-gray-800"
-                : "bg-white text-black hover:bg-gray-100"
-            }`}
-            data-testid={`time-range-${range.value}`}
-          >
-            {range.label}
-          </Button>
-        ))}
+    <div
+      className="time-range-selector-container flex items-center gap-4"
+      data-testid="time-range-selector-container"
+    >
+      <div className="time-range-selector flex-grow basis-3/4">
+        <Select value={timeRange} onValueChange={setTimeRange}>
+          <SelectTrigger className="time-range-select w-full">
+            <SelectValue placeholder="Select time range" />
+          </SelectTrigger>
+          <SelectContent>
+            {timeRanges.map((range) => (
+              <SelectItem key={range.value} value={range.value}>
+                {range.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
-      <Button className="view-crime-data-btn bg-black text-white hover:bg-gray-800" data-testid="view-crime-data-btn">
-        View Crime Data
-      </Button>
+
+      <div
+        className="time-range-button flex-grow basis-1/4"
+        data-testid="time-range-button"
+      >
+        <Button
+          className="view-crime-data-btn bg-black text-white hover:bg-gray-800"
+          data-testid="view-crime-data-btn"
+        >
+          View Crime Data
+        </Button>
+      </div>
     </div>
   );
 };
