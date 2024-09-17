@@ -235,3 +235,4 @@ dist
 # VSCode settings
 .vscode/
 cache/
+data/dataset.csv
