@@ -1,101 +1,56 @@
 // File: app/api/map/coordinates/route.ts
 
-import { NextRequest, NextResponse } from "next/server";
-import axios from "axios";
+import { NextResponse } from "next/server";
 
-const apiKey = process.env.GOOGLE_MAPS_API_KEY as string;
+export async function GET(request: Request) {
+  console.log("Received request to /api/map/coordinates");
 
-interface Location {
-  lat: number;
-  lng: number;
-}
-
-interface Bounds {
-  northeast: Location;
-  southwest: Location;
-}
-
-interface CoordinatesResponse {
-  center: Location;
-  bounds: Bounds;
-  polygon: Location[];
-}
-
-export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const neighborhood = searchParams.get("neighborhood");
+  const lat = searchParams.get("lat");
+  const lng = searchParams.get("lng");
 
-  if (!neighborhood) {
+  console.log(`Received coordinates: lat=${lat}, lng=${lng}`);
+
+  if (!lat || !lng) {
+    console.error("Missing latitude or longitude");
     return NextResponse.json(
-      { error: "Neighborhood parameter is required" },
+      { error: "Missing latitude or longitude" },
       { status: 400 }
     );
   }
 
-  try {
-    // Step 1: Use Geocoding API
-    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(neighborhood)}&key=${apiKey}`;
-    const geocodeResponse = await axios.get(geocodeUrl);
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  console.log(
+    `Using API key: ${apiKey ? "API key is set" : "API key is missing"}`
+  );
 
-    if (geocodeResponse.data.results.length === 0) {
+  const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
+  console.log(`Fetching address from: ${geocodeUrl}`);
+
+  try {
+    const response = await fetch(geocodeUrl);
+    const data = await response.json();
+
+    console.log(
+      "Received response from Google Maps API:",
+      JSON.stringify(data, null, 2)
+    );
+
+    if (data.results && data.results.length > 0) {
+      const address = data.results[0].formatted_address;
+      console.log(`Found address: ${address}`);
+      return NextResponse.json({ address });
+    } else {
+      console.error("No results found in the API response");
       return NextResponse.json(
-        { error: "Neighborhood not found" },
+        { error: "Unable to find address" },
         { status: 404 }
       );
     }
-
-    const location: Location =
-      geocodeResponse.data.results[0].geometry.location;
-
-    // Step 2: Use Places API
-    const radius = 1000; // Search within 1km radius
-    const placesUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.lat},${location.lng}&radius=${radius}&key=${apiKey}`;
-    const placesResponse = await axios.get(placesUrl);
-
-    const places = placesResponse.data.results;
-
-    // Step 3: Calculate the bounding box
-    const bounds = places.reduce(
-      (acc: Bounds, place: any) => {
-        const lat = place.geometry.location.lat;
-        const lng = place.geometry.location.lng;
-        return {
-          northeast: {
-            lat: Math.max(acc.northeast.lat, lat),
-            lng: Math.max(acc.northeast.lng, lng),
-          },
-          southwest: {
-            lat: Math.min(acc.southwest.lat, lat),
-            lng: Math.min(acc.southwest.lng, lng),
-          },
-        };
-      },
-      {
-        northeast: { lat: -90, lng: -180 },
-        southwest: { lat: 90, lng: 180 },
-      }
-    );
-
-    // Step 4: Generate a simple polygon (rectangle)
-    const polygon: Location[] = [
-      { lat: bounds.northeast.lat, lng: bounds.southwest.lng },
-      { lat: bounds.northeast.lat, lng: bounds.northeast.lng },
-      { lat: bounds.southwest.lat, lng: bounds.northeast.lng },
-      { lat: bounds.southwest.lat, lng: bounds.southwest.lng },
-      { lat: bounds.northeast.lat, lng: bounds.southwest.lng }, // Close the polygon
-    ];
-
-    const response: CoordinatesResponse = {
-      center: location,
-      bounds: bounds,
-      polygon: polygon,
-    };
-
-    return NextResponse.json(response);
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error fetching address:", error);
     return NextResponse.json(
-      { error: "An error occurred while processing your request" },
+      { error: "Error fetching address" },
       { status: 500 }
     );
   }
