@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { StandaloneSearchBox } from "@react-google-maps/api";
 import axios from "axios";
 
+// Define props interface for AddressInput component
 interface AddressInputProps {
   onAddressSelect: (
     address: string,
@@ -13,9 +14,12 @@ interface AddressInputProps {
   ) => void;
 }
 
+// AddressInput component for handling address input and current location
 const AddressInput: React.FC<AddressInputProps> = ({ onAddressSelect }) => {
+  // Reference to the Google Maps SearchBox
   const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
 
+  // Handle place selection from the SearchBox
   const handlePlaceChanged = () => {
     const places = searchBoxRef.current?.getPlaces();
     if (places && places.length > 0) {
@@ -28,12 +32,14 @@ const AddressInput: React.FC<AddressInputProps> = ({ onAddressSelect }) => {
     }
   };
 
+  // Handle getting the user's current location
   const handleCurrentLocation = async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
           try {
+            // Fetch address from coordinates using the API
             const response = await axios.get(
               `${process.env.NEXT_PUBLIC_API_URL}/api/map/coordinates?lat=${latitude}&lng=${longitude}`
             );

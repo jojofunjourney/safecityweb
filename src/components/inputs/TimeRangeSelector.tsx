@@ -8,15 +8,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+// Define props interface for TimeRangeSelector component
 interface TimeRangeSelectorProps {
   timeRange: string;
   setTimeRange: (timeRange: string) => void;
 }
 
+// TimeRangeSelector component for selecting time range and viewing crime data
 const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
   timeRange,
   setTimeRange,
 }) => {
+  // Define available time range options
   const timeRanges = [
     { value: "week", label: "Past Week" },
     { value: "month", label: "Past Month" },
