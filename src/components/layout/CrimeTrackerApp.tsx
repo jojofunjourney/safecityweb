@@ -2,9 +2,7 @@
 
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import AddressInput from "@/components/inputs/AddressInput";
-import TimeRangeSelector from "@/components/inputs/TimeRangeSelector";
-import CrimeMap from "@/components/crime/CrimeMap";
+import LocationContainer from "@/components/containers/LocationContainer";
 import TotalCrimesPanel from "@/components/panels/TotalCrimesPanel";
 import MostCommonCrimePanel from "@/components/panels/MostCommonCrimePanel";
 import SafetyScorePanel from "@/components/panels/SafetyScorePanel";
@@ -26,6 +24,21 @@ interface CrimeTrackerAppProps {
 const CrimeTrackerApp: React.FC<CrimeTrackerAppProps> = ({ initialData }) => {
   const [address, setAddress] = useState(initialData.userAddress);
   const [timeRange, setTimeRange] = useState(initialData.timeRange);
+  const [location, setLocation] = useState(initialData.location);
+
+  const handleAddressSelect = (
+    newAddress: string,
+    newLocation: { lat: number; lng: number }
+  ) => {
+    setAddress(newAddress);
+    setLocation(newLocation);
+    // Here you would typically fetch new crime data based on the new address/location
+  };
+
+  const handleTimeRangeChange = (newTimeRange: string) => {
+    setTimeRange(newTimeRange);
+    // Here you would typically fetch new crime data based on the new time range
+  };
 
   return (
     <div
@@ -48,23 +61,21 @@ const CrimeTrackerApp: React.FC<CrimeTrackerAppProps> = ({ initialData }) => {
           className="crime-tracker-content"
           data-testid="crime-tracker-content"
         >
-          <div className="crime-tracker-inputs space-y-6">
-            <AddressInput address={address} setAddress={setAddress} />
-            <TimeRangeSelector
-              timeRange={timeRange}
-              setTimeRange={setTimeRange}
+          <LocationContainer
+            initialLocation={location}
+            initialTimeRange={timeRange}
+            onAddressSelect={handleAddressSelect}
+            onTimeRangeChange={handleTimeRangeChange}
+          />
+          <div
+            className="crime-tracker-panels grid grid-cols-1 md:grid-cols-3 gap-4 mt-6"
+            data-testid="crime-tracker-panels"
+          >
+            <TotalCrimesPanel totalCrimes={initialData.totalCrimes} />
+            <MostCommonCrimePanel
+              mostCommonCrime={initialData.mostCommonCrime}
             />
-            <CrimeMap location={initialData.location} />
-            <div
-              className="crime-tracker-panels grid grid-cols-1 md:grid-cols-3 gap-4"
-              data-testid="crime-tracker-panels"
-            >
-              <TotalCrimesPanel totalCrimes={initialData.totalCrimes} />
-              <MostCommonCrimePanel
-                mostCommonCrime={initialData.mostCommonCrime}
-              />
-              <SafetyScorePanel safetyScore={initialData.safetyScore} />
-            </div>
+            <SafetyScorePanel safetyScore={initialData.safetyScore} />
           </div>
         </CardContent>
       </Card>

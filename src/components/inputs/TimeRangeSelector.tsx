@@ -25,7 +25,7 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
 
   return (
     <div
-      className="time-range-selector-container flex items-center gap-4"
+      className="time-range-selector-container flex items-center space-x-2"
       data-testid="time-range-selector-container"
     >
       <div className="time-range-selector flex-grow basis-3/4">
