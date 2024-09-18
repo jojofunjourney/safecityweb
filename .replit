@@ -1,5 +1,5 @@
 # .replit
-run = "sh setup.sh && npm run dev"
+run = "sh replit_setup.sh && npm run dev"
 entrypoint = "index.js"
 modules = ["nodejs-20:v9-20231020-a3526c9"]
 hidden = [".config", "package-lock.json", ".next", ".swc"]
