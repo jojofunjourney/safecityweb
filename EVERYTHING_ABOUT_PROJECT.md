@@ -6,7 +6,9 @@
 ---
 
 # UI Design
-Home page: [﻿claude.site/artifacts/0da83218-1440-4347-8c0f-24f061318631](https://claude.site/artifacts/0da83218-1440-4347-8c0f-24f061318631) 
+Home page
+
+![image.png](/.eraser/W9WRJGTcKWk9Hyxz7HJS___U806QwDlsSPtLlAvlCOgMCkeE3W2___8HgZhVpLj05srV1ZHboDs.png "image.png")
 
 ---
 
@@ -49,8 +51,8 @@ jobs:
         vercel-project-id: ${{ secrets.PROJECT_ID}}
         working-directory: ./
 ```
-### Github Action: PR Merge 
-- clean the dev/<feature> branch after merge to development in the upstream
+### Github Action: PR Merge
+- clean the dev/ branch after merge to development in the upstream
 ```
 name: PR Cleanup
 on:
