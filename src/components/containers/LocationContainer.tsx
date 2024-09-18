@@ -6,6 +6,7 @@ import CrimeMap from "@/components/crime/CrimeMap";
 import AddressInput from "@/components/inputs/AddressInput";
 import TimeRangeSelector from "@/components/inputs/TimeRangeSelector";
 
+// Define props interface for LocationContainer component
 interface LocationContainerProps {
   initialLocation: { lat: number; lng: number };
   initialTimeRange: string;
@@ -16,21 +17,26 @@ interface LocationContainerProps {
   onTimeRangeChange: (timeRange: string) => void;
 }
 
+// Define required Google Maps libraries
 const libraries: Libraries = ["places", "marker"];
 
+// LocationContainer component for managing location-related functionality
 const LocationContainer: React.FC<LocationContainerProps> = ({
   initialLocation,
   initialTimeRange,
   onAddressSelect,
   onTimeRangeChange,
 }) => {
+  // State for storing the current location
   const [location, setLocation] = useState(initialLocation);
 
+  // Load Google Maps script
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
     libraries: libraries,
   });
 
+  // Handle address selection
   const handleAddressSelect = (
     address: string,
     newLocation: { lat: number; lng: number }
@@ -39,6 +45,7 @@ const LocationContainer: React.FC<LocationContainerProps> = ({
     onAddressSelect(address, newLocation);
   };
 
+  // Handle loading and error states
   if (loadError) {
     return <div>Error loading maps</div>;
   }
