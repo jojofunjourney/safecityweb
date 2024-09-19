@@ -15,6 +15,7 @@ interface LocationContainerProps {
     city: CityKey
   ) => void;
   onTimeRangeChange: (timeRange: string) => void;
+  selectedTimeRange: string;
 }
 
 // Define required Google Maps libraries
@@ -24,12 +25,12 @@ const libraries: Libraries = ["places", "marker"];
 const LocationContainer: React.FC<LocationContainerProps> = ({
   onAddressSelect,
   onTimeRangeChange,
+  selectedTimeRange,
 }) => {
   // State for storing the current location
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null
   );
-  const [timeRange, setTimeRange] = useState("month");
 
   // Load Google Maps script
   const { isLoaded, loadError } = useLoadScript({
@@ -45,12 +46,6 @@ const LocationContainer: React.FC<LocationContainerProps> = ({
   ) => {
     setLocation(newLocation);
     onAddressSelect(address, newLocation, city);
-  };
-
-  // Handle time range change
-  const handleTimeRangeChange = (newTimeRange: string) => {
-    setTimeRange(newTimeRange);
-    onTimeRangeChange(newTimeRange);
   };
 
   // Handle loading and error states
@@ -75,8 +70,8 @@ const LocationContainer: React.FC<LocationContainerProps> = ({
         data-testid="time-range-selector-wrapper"
       >
         <TimeRangeSelector
-          timeRange={timeRange}
-          setTimeRange={handleTimeRangeChange}
+          timeRange={selectedTimeRange}
+          setTimeRange={onTimeRangeChange}
         />
       </div>
       <div className="crime-map-wrapper mb-4" data-testid="crime-map-wrapper">

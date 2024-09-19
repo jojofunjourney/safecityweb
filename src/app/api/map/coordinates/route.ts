@@ -1,87 +1,40 @@
 // File: app/api/map/coordinates/route.ts
 
 import { NextResponse } from "next/server";
-import { CityKey } from "@/types/crimeData";
+import { fetchAddressFromCoordinates } from "@/services/mapService";
 
 // GET handler for fetching address from coordinates
 export async function GET(request: Request) {
-  console.log("Received request to /api/map/coordinates");
-
-  // Extract latitude and longitude from query parameters
-  const { searchParams } = new URL(request.url);
-  const lat = searchParams.get("lat");
-  const lng = searchParams.get("lng");
-
-  console.log(`Received coordinates: lat=${lat}, lng=${lng}`);
-
-  // Validate required parameters
-  if (!lat || !lng) {
-    console.error("Missing latitude or longitude");
-    return NextResponse.json(
-      { error: "Missing latitude or longitude" },
-      { status: 400 }
-    );
-  }
-
-  // Get Google Maps API key from environment variables
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-  console.log(
-    `Using API key: ${apiKey ? "API key is set" : "API key is missing"}`
-  );
-
-  // Construct Google Maps Geocoding API URL
-  const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
-  console.log(`Fetching address from: ${geocodeUrl}`);
-
   try {
-    // Fetch address from Google Maps Geocoding API
-    const response = await fetch(geocodeUrl);
-    const data = await response.json();
+    console.log("Received request to /api/map/coordinates");
 
-    console.log(
-      "Received response from Google Maps API:",
-      JSON.stringify(data, null, 2)
-    );
+    // Extract latitude and longitude from query parameters
+    const { searchParams } = new URL(request.url);
+    const lat = parseFloat(searchParams.get("lat") || "0");
+    const lng = parseFloat(searchParams.get("lng") || "0");
 
-    // Extract and return formatted address if available
-    if (data.results && data.results.length > 0) {
-      const address = data.results[0].formatted_address;
-      let city: CityKey | null = null;
+    console.log(`Received coordinates: lat=${lat}, lng=${lng}`);
 
-      // Extract city from address components
-      for (const component of data.results[0].address_components) {
-        if (component.types.includes("locality")) {
-          const cityName = component.long_name.toLowerCase();
-          if (cityName.includes("new york")) city = "newYork";
-          else if (cityName.includes("los angeles")) city = "losAngeles";
-          else if (cityName === "chicago") city = "chicago";
-          else if (cityName === "seattle") city = "seattle";
-          break;
-        }
-      }
-
-      console.log(`Found address: ${address}, city: ${city}`);
-
-      if (city) {
-        return NextResponse.json({ address, city });
-      } else {
-        return NextResponse.json(
-          { error: "Unsupported city" },
-          { status: 400 }
-        );
-      }
-    } else {
-      console.error("No results found in the API response");
+    // Validate required parameters
+    if (!lat || !lng) {
+      console.error("Missing latitude or longitude");
       return NextResponse.json(
-        { error: "Unable to find address" },
-        { status: 404 }
+        { error: "Missing latitude or longitude" },
+        { status: 400 }
       );
     }
+
+    // Fetch address from coordinates from the map service
+    const { address, city } = await fetchAddressFromCoordinates(lat, lng);
+
+    // Return the address and city as a JSON response
+    return NextResponse.json({ address, city });
   } catch (error) {
+    // Log and return an error response if something goes wrong
     console.error("Error fetching address:", error);
     return NextResponse.json(
-      { error: "Error fetching address" },
-      { status: 500 }
+      { error: error.message || "Error fetching address" },
+      { status: error.status || 500 }
     );
   }
 }
