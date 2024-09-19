@@ -1,20 +1,26 @@
 "use client";
 
+// React and hooks
 import React, { useState } from "react";
+
+// Google Maps components
 import { useLoadScript, Libraries } from "@react-google-maps/api";
+
+// Custom components
 import CrimeMap from "@/components/crime/CrimeMap";
 import AddressInput from "@/components/inputs/AddressInput";
 import TimeRangeSelector from "@/components/inputs/TimeRangeSelector";
 
+// Types
+import { CityKey } from "@/types/crimeData";
+import { TimeRange } from "@/constants/timeRanges";
+import { OnAddressSelectFunction, AddressSelection } from "@/types/addressSelection";
+
 // Define props interface for LocationContainer component
 interface LocationContainerProps {
-  initialLocation: { lat: number; lng: number };
-  initialTimeRange: string;
-  onAddressSelect: (
-    address: string,
-    location: { lat: number; lng: number }
-  ) => void;
-  onTimeRangeChange: (timeRange: string) => void;
+  onAddressSelect: OnAddressSelectFunction;
+  onTimeRangeChange: (timeRange: TimeRange) => void;
+  selectedTimeRange: TimeRange;
 }
 
 // Define required Google Maps libraries
@@ -22,13 +28,14 @@ const libraries: Libraries = ["places", "marker"];
 
 // LocationContainer component for managing location-related functionality
 const LocationContainer: React.FC<LocationContainerProps> = ({
-  initialLocation,
-  initialTimeRange,
   onAddressSelect,
   onTimeRangeChange,
+  selectedTimeRange,
 }) => {
   // State for storing the current location
-  const [location, setLocation] = useState(initialLocation);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
 
   // Load Google Maps script
   const { isLoaded, loadError } = useLoadScript({
@@ -37,12 +44,9 @@ const LocationContainer: React.FC<LocationContainerProps> = ({
   });
 
   // Handle address selection
-  const handleAddressSelect = (
-    address: string,
-    newLocation: { lat: number; lng: number }
-  ) => {
-    setLocation(newLocation);
-    onAddressSelect(address, newLocation);
+  const handleAddressSelect = (selection: AddressSelection) => {
+    setLocation(selection.location);
+    onAddressSelect(selection);
   };
 
   // Handle loading and error states
@@ -67,7 +71,7 @@ const LocationContainer: React.FC<LocationContainerProps> = ({
         data-testid="time-range-selector-wrapper"
       >
         <TimeRangeSelector
-          timeRange={initialTimeRange}
+          timeRange={selectedTimeRange}
           setTimeRange={onTimeRangeChange}
         />
       </div>
