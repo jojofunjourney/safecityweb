@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
   try {
     // First, get the coordinates of the area to avoid
     const coordinatesResponse = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/map/coordinates?neighborhood=${encodeURIComponent(neighborhood)}`
+      `/api/map/coordinates?neighborhood=${encodeURIComponent(neighborhood)}`
     );
     const { polygon } = coordinatesResponse.data;
 
