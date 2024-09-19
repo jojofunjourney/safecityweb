@@ -13,7 +13,7 @@ export const fetchCrimeData = async (
 
   try {
     const response = await axios.get<CrimeDataResponse>(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/crime?city=${city}&lat=${lat}&lon=${lng}&timeRange=${timeRange}`
+      `/api/crime?city=${city}&lat=${lat}&lon=${lng}&timeRange=${timeRange}`
     );
     console.log("Received crime data:", response.data);
     return response.data;
@@ -29,7 +29,7 @@ export const fetchAddressFromCoordinates = async (
 ): Promise<{ address: string; city: CityKey }> => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/map/coordinates?lat=${latitude}&lng=${longitude}`
+      `/api/map/coordinates?lat=${latitude}&lng=${longitude}`
     );
     console.log(
       "AddressInput: Received response from coordinates API:",
