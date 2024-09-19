@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface MostCommonCrimePanelProps {
-  mostCommonCrime: { type: string; quantity: number };
+  mostCommonCrime?: { type: string; count: number };
 }
 
 const MostCommonCrimePanel: React.FC<MostCommonCrimePanelProps> = ({
@@ -26,13 +26,18 @@ const MostCommonCrimePanel: React.FC<MostCommonCrimePanelProps> = ({
           className="most-common-crime-type text-xl font-semibold"
           data-testid="most-common-crime-type"
         >
-          {mostCommonCrime.type}
+          {!mostCommonCrime || !mostCommonCrime.type
+            ? "NA"
+            : mostCommonCrime.type}
         </p>
         <p
           className="most-common-crime-count text-sm text-gray-500"
           data-testid="most-common-crime-count"
         >
-          {mostCommonCrime.quantity} incidents
+          {!mostCommonCrime || !mostCommonCrime.count
+            ? 0
+            : mostCommonCrime.count}{" "}
+          incidents
         </p>
       </CardContent>
     </Card>

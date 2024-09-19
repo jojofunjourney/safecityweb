@@ -6,38 +6,64 @@ import LocationContainer from "@/components/containers/LocationContainer";
 import TotalCrimesPanel from "@/components/panels/TotalCrimesPanel";
 import MostCommonCrimePanel from "@/components/panels/MostCommonCrimePanel";
 import SafetyScorePanel from "@/components/panels/SafetyScorePanel";
+import axios from "axios";
+import { CityKey, CrimeDataResponse } from "@/types/crimeData";
 
-interface HomeData {
-  userAddress: string;
-  neighborhood: string;
-  location: { lat: number; lng: number };
-  timeRange: string;
-  totalCrimes: number;
-  mostCommonCrime: { type: string; quantity: number };
-  safetyScore: number;
-}
+interface CrimeTrackerAppProps {}
 
-interface CrimeTrackerAppProps {
-  initialData: HomeData;
-}
+const CrimeTrackerApp: React.FC<CrimeTrackerAppProps> = () => {
+  const [crimeData, setCrimeData] = useState<CrimeDataResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-const CrimeTrackerApp: React.FC<CrimeTrackerAppProps> = ({ initialData }) => {
-  const [address, setAddress] = useState(initialData.userAddress);
-  const [timeRange, setTimeRange] = useState(initialData.timeRange);
-  const [location, setLocation] = useState(initialData.location);
+  const fetchCrimeData = async (
+    city: CityKey,
+    lat: number,
+    lon: number,
+    timeRange: string
+  ) => {
+    setLoading(true);
+    setError(null);
+    try {
+      console.log(
+        `Fetching crime data for ${city} at (${lat}, ${lon}) for ${timeRange}`
+      );
+      const response = await axios.get<CrimeDataResponse>(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/crime-data?city=${city}&lat=${lat}&lon=${lon}&timeRange=${timeRange}`
+      );
+      console.log("Received crime data:", response.data);
+      setCrimeData(response.data);
+    } catch (err) {
+      console.error("Error fetching crime data:", err);
+      setError("Failed to fetch crime data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAddressSelect = (
     newAddress: string,
-    newLocation: { lat: number; lng: number }
+    newLocation: { lat: number; lng: number },
+    city: CityKey
   ) => {
-    setAddress(newAddress);
-    setLocation(newLocation);
-    // Here you would typically fetch new crime data based on the new address/location
+    console.log(`Address selected: ${newAddress}`);
+    console.log(`Location: (${newLocation.lat}, ${newLocation.lng})`);
+    console.log(`City: ${city}`);
+    fetchCrimeData(city, newLocation.lat, newLocation.lng, "month");
   };
 
   const handleTimeRangeChange = (newTimeRange: string) => {
-    setTimeRange(newTimeRange);
-    // Here you would typically fetch new crime data based on the new time range
+    console.log(`Time range changed to: ${newTimeRange}`);
+    if (crimeData) {
+      fetchCrimeData(
+        crimeData.city,
+        crimeData.latitude,
+        crimeData.longitude,
+        newTimeRange
+      );
+    } else {
+      console.warn("Time range changed but no crime data available");
+    }
   };
 
   return (
@@ -62,20 +88,24 @@ const CrimeTrackerApp: React.FC<CrimeTrackerAppProps> = ({ initialData }) => {
           data-testid="crime-tracker-content"
         >
           <LocationContainer
-            initialLocation={location}
-            initialTimeRange={timeRange}
             onAddressSelect={handleAddressSelect}
             onTimeRangeChange={handleTimeRangeChange}
           />
+          {loading && (
+            <div className="text-center my-4">Loading crime data...</div>
+          )}
+          {error && (
+            <div className="text-red-500 text-center my-4">{error}</div>
+          )}
           <div
             className="crime-tracker-panels grid grid-cols-1 md:grid-cols-3 gap-4 mt-6"
             data-testid="crime-tracker-panels"
           >
-            <TotalCrimesPanel totalCrimes={initialData.totalCrimes} />
+            <TotalCrimesPanel totalCrimes={crimeData?.totalCrimes} />
             <MostCommonCrimePanel
-              mostCommonCrime={initialData.mostCommonCrime}
+              mostCommonCrime={crimeData?.mostCommonCrime}
             />
-            <SafetyScorePanel safetyScore={initialData.safetyScore} />
+            <SafetyScorePanel safetyScore={0} />
           </div>
         </CardContent>
       </Card>

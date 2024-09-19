@@ -1,6 +1,7 @@
 // File: app/api/map/coordinates/route.ts
 
 import { NextResponse } from "next/server";
+import { CityKey } from "@/types/crimeData";
 
 // GET handler for fetching address from coordinates
 export async function GET(request: Request) {
@@ -45,8 +46,30 @@ export async function GET(request: Request) {
     // Extract and return formatted address if available
     if (data.results && data.results.length > 0) {
       const address = data.results[0].formatted_address;
-      console.log(`Found address: ${address}`);
-      return NextResponse.json({ address });
+      let city: CityKey | null = null;
+
+      // Extract city from address components
+      for (const component of data.results[0].address_components) {
+        if (component.types.includes("locality")) {
+          const cityName = component.long_name.toLowerCase();
+          if (cityName.includes("new york")) city = "newYork";
+          else if (cityName.includes("los angeles")) city = "losAngeles";
+          else if (cityName === "chicago") city = "chicago";
+          else if (cityName === "seattle") city = "seattle";
+          break;
+        }
+      }
+
+      console.log(`Found address: ${address}, city: ${city}`);
+
+      if (city) {
+        return NextResponse.json({ address, city });
+      } else {
+        return NextResponse.json(
+          { error: "Unsupported city" },
+          { status: 400 }
+        );
+      }
     } else {
       console.error("No results found in the API response");
       return NextResponse.json(
