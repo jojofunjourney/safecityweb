@@ -6,7 +6,7 @@ import axios from "axios";
 async function getHomeData() {
   try {
     const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/home`,
+      `/api/home`,
       {
         // Add any necessary request body here
       },
