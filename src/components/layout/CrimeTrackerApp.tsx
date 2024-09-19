@@ -29,7 +29,7 @@ const CrimeTrackerApp: React.FC<CrimeTrackerAppProps> = () => {
         `Fetching crime data for ${city} at (${lat}, ${lon}) for ${timeRange}`
       );
       const response = await axios.get<CrimeDataResponse>(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/crime-data?city=${city}&lat=${lat}&lon=${lon}&timeRange=${timeRange}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/crime?city=${city}&lat=${lat}&lon=${lon}&timeRange=${timeRange}`
       );
       console.log("Received crime data:", response.data);
       setCrimeData(response.data);

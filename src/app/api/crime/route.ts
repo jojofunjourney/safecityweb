@@ -94,28 +94,28 @@ const fetchCityData = async (
   switch (city) {
     case "newYork":
       query = query
-        .where<NewYorkCrimeData>(
+        .where(
           `cmplnt_fr_dt >= '${startDate}' AND cmplnt_fr_dt <= '${endDate}'`
         )
         .select("ofns_desc as crime_type, latitude, longitude");
       break;
     case "losAngeles":
       query = query
-        .where<LosAngelesCrimeData>(
+        .where(
           `date_occ >= '${startDate}T00:00:00' AND date_occ <= '${endDate}T23:59:59'`
         )
         .select("crm_cd_desc as crime_type, lat, lon");
       break;
     case "chicago":
       query = query
-        .where<ChicagoCrimeData>(
+        .where(
           `date >= '${startDate}T00:00:00' AND date <= '${endDate}T23:59:59'`
         )
         .select("primary_type as crime_type, latitude, longitude");
       break;
     case "seattle":
       query = query
-        .where<SeattleCrimeData>(
+        .where(
           `offense_start_datetime >= '${startDate}T00:00:00' AND offense_start_datetime <= '${endDate}T23:59:59'`
         )
         .select("offense as crime_type, latitude, longitude");
