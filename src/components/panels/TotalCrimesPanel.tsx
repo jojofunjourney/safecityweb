@@ -1,13 +1,23 @@
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface TotalCrimesPanelProps {
-  totalCrimes: number;
+  totalCrimes?: number;
 }
 
 const TotalCrimesPanel: React.FC<TotalCrimesPanelProps> = ({ totalCrimes }) => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/total-crimes");
+  };
+
   return (
-    <Card className="total-crimes-panel" data-testid="total-crimes-panel">
+    <Card
+      className="cursor-pointer hover:shadow-lg transition-shadow"
+      onClick={handleClick}
+    >
       <CardHeader>
         <CardTitle
           className="total-crimes-title text-lg font-semibold"
@@ -21,7 +31,7 @@ const TotalCrimesPanel: React.FC<TotalCrimesPanelProps> = ({ totalCrimes }) => {
           className="total-crimes-count text-3xl font-bold"
           data-testid="total-crimes-count"
         >
-          {totalCrimes}
+          {totalCrimes ? totalCrimes : 0}
         </p>
       </CardContent>
     </Card>
