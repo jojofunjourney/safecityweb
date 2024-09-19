@@ -49,12 +49,12 @@ export const fetchCityData = async (
   const dataset = CITY_DATASETS[city];
   const apiUrl = dataset.apiEndpoint;
 
-  let query = `$limit=1000`;
+  let query = `$limit=100000`;
 
   // Adjust query based on city-specific data structure
   switch (city) {
     case "newYork":
-      query += `&$where=cmplnt_fr_dt >= '${startDate}' AND cmplnt_fr_dt <= '${endDate}'`;
+      query += `&$where=cmplnt_fr_dt >= '${startDate}T00:00:00' AND cmplnt_fr_dt <= '${endDate}T23:59:59'`;
       query += `&$select=ofns_desc as crime_type, latitude, longitude`;
       break;
     case "losAngeles":
