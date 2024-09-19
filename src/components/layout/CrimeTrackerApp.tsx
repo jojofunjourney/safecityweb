@@ -1,16 +1,29 @@
 "use client";
 
+// React and hooks
 import React, { useState } from "react";
+
+// UI Components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import LoadingOverlay from "@/components/ui/LoadingOverlay";
+
+// Custom Components
 import LocationContainer from "@/components/containers/LocationContainer";
 import TotalCrimesPanel from "@/components/panels/TotalCrimesPanel";
 import MostCommonCrimePanel from "@/components/panels/MostCommonCrimePanel";
 import SafetyScorePanel from "@/components/panels/SafetyScorePanel";
-import LoadingOverlay from "@/components/ui/LoadingOverlay";
+
+// Types
 import { CityKey, CrimeDataResponse } from "@/types/crimeData";
-import { cn } from "@/lib/utils";
+import { OnAddressSelectFunction, AddressSelection } from "@/types/addressSelection";
+
+// Utilities and API
+import { cn, calculateSafetyScore } from "@/lib/utils";
 import { fetchCrimeData } from "@/lib/api";
+
+// Constants and types
+import { TimeRange, DEFAULT_TIME_RANGE } from "@/constants/timeRanges";
 
 interface CrimeTrackerAppProps {}
 
@@ -23,7 +36,7 @@ const CrimeTrackerApp: React.FC<CrimeTrackerAppProps> = () => {
     location: { lat: number; lng: number };
     city: CityKey;
   } | null>(null);
-  const [timeRange, setTimeRange] = useState<string>("1year"); // Set default to 1 year
+  const [timeRange, setTimeRange] = useState<TimeRange>(DEFAULT_TIME_RANGE);
 
   const handleFetchCrimeData = async () => {
     if (!addressData) {
@@ -48,18 +61,14 @@ const CrimeTrackerApp: React.FC<CrimeTrackerAppProps> = () => {
     }
   };
 
-  const handleAddressSelect = (
-    newAddress: string,
-    newLocation: { lat: number; lng: number },
-    city: CityKey
-  ) => {
-    console.log(`Address selected: ${newAddress}`);
-    console.log(`Location: (${newLocation.lat}, ${newLocation.lng})`);
-    console.log(`City: ${city}`);
-    setAddressData({ address: newAddress, location: newLocation, city });
+  const handleAddressSelect: OnAddressSelectFunction = (selection) => {
+    console.log(`Address selected: ${selection.address}`);
+    console.log(`Location: (${selection.location.lat}, ${selection.location.lng})`);
+    console.log(`City: ${selection.city}`);
+    setAddressData(selection);
   };
 
-  const handleTimeRangeChange = (newTimeRange: string) => {
+  const handleTimeRangeChange = (newTimeRange: TimeRange) => {
     console.log(`Time range changed to: ${newTimeRange}`);
     setTimeRange(newTimeRange);
   };
@@ -129,14 +138,6 @@ const CrimeTrackerApp: React.FC<CrimeTrackerAppProps> = () => {
       </Card>
     </div>
   );
-};
-
-// Helper function to calculate safety score (you may want to implement a more sophisticated algorithm)
-const calculateSafetyScore = (crimeData: CrimeDataResponse): number => {
-  // This is a placeholder implementation. You should replace it with a proper algorithm.
-  const maxCrimes = 1000; // Arbitrary maximum number of crimes
-  const score = Math.max(0, 100 - (crimeData.totalCrimes / maxCrimes) * 100);
-  return Math.round(score);
 };
 
 export default CrimeTrackerApp;

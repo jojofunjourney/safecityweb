@@ -1,21 +1,26 @@
 "use client";
 
+// React and hooks
 import React, { useState } from "react";
+
+// Google Maps components
 import { useLoadScript, Libraries } from "@react-google-maps/api";
+
+// Custom components
 import CrimeMap from "@/components/crime/CrimeMap";
 import AddressInput from "@/components/inputs/AddressInput";
 import TimeRangeSelector from "@/components/inputs/TimeRangeSelector";
+
+// Types
 import { CityKey } from "@/types/crimeData";
+import { TimeRange } from "@/constants/timeRanges";
+import { OnAddressSelectFunction, AddressSelection } from "@/types/addressSelection";
 
 // Define props interface for LocationContainer component
 interface LocationContainerProps {
-  onAddressSelect: (
-    address: string,
-    location: { lat: number; lng: number },
-    city: CityKey
-  ) => void;
-  onTimeRangeChange: (timeRange: string) => void;
-  selectedTimeRange: string;
+  onAddressSelect: OnAddressSelectFunction;
+  onTimeRangeChange: (timeRange: TimeRange) => void;
+  selectedTimeRange: TimeRange;
 }
 
 // Define required Google Maps libraries
@@ -39,13 +44,9 @@ const LocationContainer: React.FC<LocationContainerProps> = ({
   });
 
   // Handle address selection
-  const handleAddressSelect = (
-    address: string,
-    newLocation: { lat: number; lng: number },
-    city: CityKey
-  ) => {
-    setLocation(newLocation);
-    onAddressSelect(address, newLocation, city);
+  const handleAddressSelect = (selection: AddressSelection) => {
+    setLocation(selection.location);
+    onAddressSelect(selection);
   };
 
   // Handle loading and error states

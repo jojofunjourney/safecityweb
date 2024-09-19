@@ -1,21 +1,30 @@
 "use client";
 
+// React and hooks
 import React, { useRef, useState } from "react";
+
+// UI components and icons
 import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import LoadingOverlay from "@/components/ui/LoadingOverlay";
+
+// Google Maps components
 import { StandaloneSearchBox } from "@react-google-maps/api";
+
+// Types
 import { CityKey } from "@/types/crimeData";
+import {
+  OnAddressSelectFunction,
+  AddressSelection,
+} from "@/types/addressSelection";
+
+// Utilities and API
 import { determineCity, cn } from "@/lib/utils";
 import { fetchAddressFromCoordinates } from "@/lib/api";
-import LoadingOverlay from "@/components/ui/LoadingOverlay";
 
 // Define props interface for AddressInput component
 interface AddressInputProps {
-  onAddressSelect: (
-    address: string,
-    location: { lat: number; lng: number },
-    city: CityKey
-  ) => void;
+  onAddressSelect: OnAddressSelectFunction;
 }
 
 // AddressInput component for handling address input and current location
@@ -48,11 +57,12 @@ const AddressInput: React.FC<AddressInputProps> = ({ onAddressSelect }) => {
     try {
       const city = determineCity(address);
       console.log("AddressInput: Determined city:", city);
-      onAddressSelect(
+      const selection: AddressSelection = {
         address,
-        { lat: location.lat(), lng: location.lng() },
-        city
-      );
+        location: { lat: location.lat(), lng: location.lng() },
+        city,
+      };
+      onAddressSelect(selection);
     } catch (error) {
       console.error("AddressInput: Error determining city:", error);
       // Handle the error (e.g., show a message to the user)
@@ -91,7 +101,12 @@ const AddressInput: React.FC<AddressInputProps> = ({ onAddressSelect }) => {
       fetchAddressFromCoordinates(crd.latitude, crd.longitude)
         .then(({ address, city }) => {
           if (city) {
-            onAddressSelect(address, { lat: crd.latitude, lng: crd.longitude }, city);
+            const selection: AddressSelection = {
+              address,
+              location: { lat: crd.latitude, lng: crd.longitude },
+              city,
+            };
+            onAddressSelect(selection);
           } else {
             throw new Error("Unsupported city");
           }
