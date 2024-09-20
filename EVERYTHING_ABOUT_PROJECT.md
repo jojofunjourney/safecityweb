@@ -6,11 +6,14 @@
 ---
 
 # UI Design
-Home page
+## Home page
+### No address 
+![image.png](/.eraser/W9WRJGTcKWk9Hyxz7HJS___U806QwDlsSPtLlAvlCOgMCkeE3W2___kUCVFm_aKx7d8U35UrMoN.png "image.png")
 
-![image.png](/.eraser/W9WRJGTcKWk9Hyxz7HJS___U806QwDlsSPtLlAvlCOgMCkeE3W2___8HgZhVpLj05srV1ZHboDs.png "image.png")
+### Address provided
+![image.png](/.eraser/W9WRJGTcKWk9Hyxz7HJS___U806QwDlsSPtLlAvlCOgMCkeE3W2___VMt9lW1l4JixuFq7bFMuC.png "image.png")
 
----
+
 
 # Development
 ---
@@ -74,6 +77,8 @@ jobs:
 [﻿replit.com/@JoeJOEJOE2/citysafe](https://replit.com/@JoeJOEJOE2/citysafe) 
 
 ## Production
+
+
 
 
 
