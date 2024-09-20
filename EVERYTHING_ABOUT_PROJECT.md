@@ -1,4 +1,4 @@
-<p><a target="_blank" href="https://app.eraser.io/workspace/W9WRJGTcKWk9Hyxz7HJS" id="edit-in-eraser-github-link"><img alt="Edit in Eraser" src="https://firebasestorage.googleapis.com/v0/b/second-petal-295822.appspot.com/o/images%2Fgithub%2FOpen%20in%20Eraser.svg?alt=media&amp;token=968381c8-a7e7-472a-8ed6-4a6626da5501"></a></p>
+<p><a target="_blank" href="https://app.eraser.io/workspace/PuokmE0WGRPadKaAzvot" id="edit-in-eraser-github-link"><img alt="Edit in Eraser" src="https://firebasestorage.googleapis.com/v0/b/second-petal-295822.appspot.com/o/images%2Fgithub%2FOpen%20in%20Eraser.svg?alt=media&amp;token=968381c8-a7e7-472a-8ed6-4a6626da5501"></a></p>
 
 # App info
 [﻿System Design](https://app.eraser.io/workspace/a0EyiMuiFYz5o35X6pbV?origin=share) 
@@ -6,14 +6,7 @@
 ---
 
 # UI Design
-## Home page
-### No address 
-![image.png](/.eraser/W9WRJGTcKWk9Hyxz7HJS___U806QwDlsSPtLlAvlCOgMCkeE3W2___kUCVFm_aKx7d8U35UrMoN.png "image.png")
-
-### Address provided
-![image.png](/.eraser/W9WRJGTcKWk9Hyxz7HJS___U806QwDlsSPtLlAvlCOgMCkeE3W2___VMt9lW1l4JixuFq7bFMuC.png "image.png")
-
-
+[﻿UX Design](https://app.eraser.io/workspace/JloIBeXFlVfJbOKf47GT) 
 
 # Development
 ---
@@ -81,6 +74,4 @@ jobs:
 
 
 
-
-
-<!--- Eraser file: https://app.eraser.io/workspace/W9WRJGTcKWk9Hyxz7HJS --->
+<!--- Eraser file: https://app.eraser.io/workspace/PuokmE0WGRPadKaAzvot --->
