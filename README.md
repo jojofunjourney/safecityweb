@@ -1,4 +1,4 @@
-<p><a target="_blank" href="https://app.eraser.io/workspace/Ki6XfG0qdEugiqkrEZyS" id="edit-in-eraser-github-link"><img alt="Edit in Eraser" src="https://firebasestorage.googleapis.com/v0/b/second-petal-295822.appspot.com/o/images%2Fgithub%2FOpen%20in%20Eraser.svg?alt=media&amp;token=968381c8-a7e7-472a-8ed6-4a6626da5501"></a></p>
+<p><a target="_blank" href="https://app.eraser.io/workspace/ny9S5RERG9mnNZFeXtsU" id="edit-in-eraser-github-link"><img alt="Edit in Eraser" src="https://firebasestorage.googleapis.com/v0/b/second-petal-295822.appspot.com/o/images%2Fgithub%2FOpen%20in%20Eraser.svg?alt=media&amp;token=968381c8-a7e7-472a-8ed6-4a6626da5501"></a></p>
 
 # Crime Tracker Application
 ## Table of Contents
@@ -56,30 +56,66 @@ The project is organized with the following key components:
 - `next.config.js`  : Next.js configuration
 - `package.json`  : Project dependencies and scripts
 - `tsconfig.json`  : TypeScript configuration
-## Components
-### CrimeTrackerApp
-The main component that orchestrates the entire application. It manages the state for address and time range, and composes the other components.
+## Components and Routes
 
-### AddressInput
-Handles the address input functionality, including a text input for manual address entry and a button to use the current location.
+### Main Application
+- `src/components/layout/CrimeTrackerApp.tsx`: The core component that orchestrates the entire application. It manages the global state, handles user interactions, and composes other components.
 
-### TimeRangeSelector
-Manages the time range selection with a dropdown menu and includes a button to view crime data.
+### Input Components
+- `src/components/inputs/AddressInput.tsx`: Handles address input and geolocation. Users can enter an address manually or use their current location.
+- `src/components/inputs/TimeRangeSelector.tsx`: Allows users to select a time range for crime data analysis.
 
-### CrimeMap
-A placeholder component for the future implementation of a map display.
+### Crime Data Components
+- `src/components/crime/CrimeMap.tsx`: Displays an interactive map with crime data points.
+- `src/components/crime/CrimeStatistics.tsx`: Shows various crime statistics based on the selected location and time range.
+- `src/components/crime/CrimeHistory.tsx`: Presents historical crime data in a tabular or graphical format.
+- `src/components/crime/TotalCrime.tsx`: Displays the total number of crimes for the selected criteria.
 
-### CrimeStatistics
-Displays crime statistics in a grid of cards, showing total crimes, most common crime, and a safety score.
+### Safety Components
+- `src/components/safety/SafetyScore.tsx`: Calculates and displays a safety score based on crime data.
 
-## Technologies Used
-- React
-- TypeScript
-- Next.js
-- Tailwind CSS
-- Lucide React (for icons)
-- class-variance-authority (for component styling)
-- Radix UI (for accessible UI components)
+### Panel Components
+- `src/components/panels/TotalCrimesPanel.tsx`: A panel showing the total number of crimes.
+- `src/components/panels/MostCommonCrimePanel.tsx`: Displays information about the most frequent type of crime.
+- `src/components/panels/SafetyScorePanel.tsx`: Shows the safety score in a dedicated panel.
+
+### UI Components
+- `src/components/ui/`: Contains reusable UI components like buttons, cards, inputs, and progress bars.
+
+## Routes
+
+### Main Pages
+- `src/app/page.tsx`: The home page of the application, displaying the main crime tracker interface.
+- `src/app/safety-score/page.tsx`: A dedicated page for detailed safety score information.
+- `src/app/total-crimes/page.tsx`: Shows comprehensive statistics about total crimes.
+- `src/app/crime-history/page.tsx`: Displays historical crime data and trends.
+
+### API Routes
+- `src/app/api/crime/route.ts`: Handles requests for crime data, interfacing with the crime data service.
+- `src/app/api/home/route.ts`: Manages requests related to the home page functionality.
+- `src/app/api/map/coordinates/route.ts`: Processes requests for map coordinates.
+- `src/app/api/map/route/route.ts`: Handles routing-related requests for the map component.
+
+## Services and Utilities
+
+### Services
+- `src/services/crimeService.ts`: Contains business logic for processing crime data, including data fetching, filtering, and analysis.
+- `src/services/mapService.ts`: Handles map-related operations, such as geocoding and reverse geocoding.
+
+### Utilities
+- `src/lib/api.ts`: Provides utility functions for API calls.
+- `src/lib/util.ts` and `src/lib/utils.ts`: Contain general utility functions used throughout the application.
+
+## Types
+- `src/types/crimeData.ts`: Defines TypeScript interfaces and types for crime data structures.
+- `src/types/addressSelection.ts`: Contains types related to address selection and geolocation.
+
+## Styles
+- `src/styles/`: Contains global styles and CSS modules for specific components.
+
+## Configuration
+- `tailwind.config.js`: Configuration file for Tailwind CSS, defining custom themes and styles.
+
 ## Getting Started
 ### Prerequisites
 - Node.js (version 14 or later)
